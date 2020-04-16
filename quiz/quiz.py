@@ -3,6 +3,7 @@
 
 from flask import Flask
 from flask import render_template
+from flask import request, redirect, url_for, flash
 
 app = Flask(__name__)
 
@@ -32,14 +33,30 @@ DANE = [{
     'pytanie': 'Symbol pierwiastka Helu, to:',
     'odpowiedzi': ['Fe', 'H', 'He'],
     'odpok': 'He'},
-    
 ]
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
+    
     # return 'Cześć, tu Python!'
     return render_template('index.html', pytania=DANE)
 
+@app.route('/wyniki', methods=['GET', 'POST'])
+def wyniki():
+
+    if request.method == 'POST':
+        punkty = 0
+        odpowiedzi = request.form
+
+        for pnr, odp in odpowiedzi.items():
+            if odp == DANE[int(pnr)]['odpok']:
+                punkty += 1
+
+        flash('Liczba poprawnych odpowiedzi, to: {0}'.format(punkty))
+        return redirect(url_for('wyniki'))
+
+    # return 'Cześć, tu Python!'
+    return render_template('wyniki.html', pytania=DANE)
 
 if __name__ == '__main__':
     app.run(debug=True)
