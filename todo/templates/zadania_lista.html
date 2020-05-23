@@ -1,0 +1,67 @@
+<!-- todo/templates/zadania_lista.html -->
+<html>
+  <head>
+  <!-- nazwa aplikacji pobrana z ustawień -->
+    <title>{{ config.SITE_NAME }}</title>
+  <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script> 
+  <!-- dołączamy arkusz CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  </head>
+  <body>
+    <h1>{{ config.SITE_NAME }}:</h1>
+        <!-- formularz dodawania zadania -->
+  <form class="add-form" method="POST" action="{{ url_for('zadania') }}">
+    <div class="row">
+        <input type="text" class="form-control" name="zadanie" value=""/>
+        <button type="submit" class="btn btn-primary">Dodaj zadanie</button>
+    </div>
+ </form>
+
+    <!-- informacje o sukcesie lub błędzie -->
+    <p>
+      {% if error %}
+        <strong class="error">Błąd: {{ error }}</strong>
+      {% endif %}
+
+      {% for message in get_flashed_messages() %}
+        <strong class="success">{{ message }}</strong>
+      {% endfor %}
+    </p>
+  <ol>
+      <!-- wypisujemy kolejno wszystkie zdania -->
+      {% for zadanie in zadania %}
+        <li>
+          <!-- wyróżnienie zadań zakończonych -->
+          {% if zadanie.zrobione %}
+            <span class="done">{{ zadanie.zadanie }} – <em>{{ zadanie.data_pub }}</em></span>
+          {% else %}
+            {{ zadanie.zadanie }} – <em>{{ zadanie.data_pub }}</em>
+          {% endif %}
+
+          <!-- formularz zmiany statusu zadania -->
+          {% if not zadanie.zrobione %}
+            <form method="POST" action="{{ url_for('zrobione') }}">
+              <!-- wysyłamy jedynie informacje o id zadania -->
+              <input type="hidden" name="id" value="{{ zadanie.id }}"/>
+              <button type="submit" class="btn btn-outline-primary btn-sm">Wykonane</button>
+            </form>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+<?php
+
+
+
+<p><a href="{{ url_for('index') }}" class="btn btn-secondary">Strona główna</a></p>
+
+  </body>
+</html>
