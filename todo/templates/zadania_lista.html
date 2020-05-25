@@ -54,14 +54,18 @@
               <button type="submit" class="btn btn-outline-primary btn-sm">Wykonane</button>
             </form>
           {% endif %}
+           <form method="POST" action="{{ url_for('usun') }}">
+              <!-- wysyłamy jedynie informacje o id zadania -->
+              <input type="hidden" name="id" value="{{ zadanie.id }}"/>
+              <button type="submit" class="btn btn-outline-danger btn-sm">Usuń</button>
+            </form>
         </li>
       {% endfor %}
     </ol>
-<?php
 
 
 
-<p><a href="{{ url_for('index') }}" class="btn btn-secondary">Strona główna</a></p>
 
+<a href="{{ url_for('index') }}" class="btn btn-secondary">Strona główna</a>
   </body>
 </html>

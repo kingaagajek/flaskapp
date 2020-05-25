@@ -7,6 +7,7 @@ from datetime import datetime
 from flask import flash, redirect, url_for, request
 import os
 import sqlite3
+from peewee import SqliteDatabase
 
 
 app = Flask(__name__)
@@ -64,15 +65,15 @@ def zrobione():
     flash('Zmieniono status zadania.')
     return redirect(url_for('zadania'))
 
-@app.route('/usun/<int:pid>', methods=['GET', 'POST'])
-def usun(pid):
-    """Usunięcie pytania o identyfikatorze pid"""
-    p = get_or_404(pid)
-    if request.method == 'POST':
-        flash('Usunięto pytanie {0}'.format(p.pytanie), 'sukces')
-        p.delete_instance(recursive=True)
-        return redirect(url_for('index'))
-    return render_template("pytanie_usun.html", pytanie=p)
+
+@app.route('/usun', methods=['POST'])
+def usun():
+    zadanie_id = request.form['id']
+    db = get_db()
+    db.execute('DELETE FROM zadania WHERE id=?', [zadanie_id]);
+    db.commit()
+    flash('Usunięto zadanie!', 'text-danger')
+    return redirect(url_for('zadania'))
 
 @app.teardown_appcontext
 def close_db(error):

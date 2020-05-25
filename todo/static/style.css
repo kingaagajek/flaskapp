@@ -3,7 +3,7 @@
 /* todo/static/style.css */
 
 body { margin-top: 20px; background-color: lightgrey; }
-h1, p { margin-left: 20px; }
+h1, p, a { margin-left: 20px; }
 .add-form { margin-left: 20px; }
 ol { text-align: left; }
 em { font-size: 11px; margin-left: 10px; }
